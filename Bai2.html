@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+    <!-- Phần đầu -->
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="main.css">
+<title> Bài 2: Công thức lượng giác </title>
+<link rel="stylesheet" href="baihoc.css">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&display=swap" rel="stylesheet">
+<script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            }
+        };
+    </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<!-- Phần thân -->
+<body>
+    <div class = "header"> </div>
+    <main class="container">
+    <h1 style ="color:blue"> Bài 2: Công thức lượng giác </h1>
+    <div>
+    <h2 style = "color:cornflowerblue"> Kiến thức trọng tâm: </h2>
+<ul>
+    <li class = "heading2"> Công thức cộng </li>
+    <h4> "sin thì sin cos cos sin" </h4>
+    <p> sin( a + b )  = sina.cosb + cosa.sinb </p>
+    <p> sin ( a - b ) = sina.cosb - cosa.sinb</p>
+    <h4> "cos thì cos cos sin sin dấu trừ" </h4>
+    <p> cos ( a + b ) = cosa.cosb - sina.sinb </p>
+    <p> cos( a - b ) = cosa.cosb + sina.sinb</p>
+    <h4> "tan thì ta tổng hai tan, chia cho 1 trừ tan ta tan mình" </h4>
+    <p> tan ( a + b ) = \(\frac{tana + tanb}{ 1 - tana.tanb}\)</p>
+    <p> tan ( a - b ) = \(\frac{tana - tanb}{1 + tana.tanb}\)</p>
+
+    <div class="example">
+  <p class="example-title">Ví dụ 1</p>
+  <p>Tính \(\sin 75^\circ\).</p>
+  <details>
+    <summary>Xem lời giải</summary>
+    <div class="solution">
+      <p>\(\sin 75^\circ = \sin(45^\circ + 30^\circ) = \sin 45^\circ \cos 30^\circ + \cos 45^\circ \sin 30^\circ\)</p>
+      <p>\(= \frac{\sqrt{2}}{2} \cdot \frac{\sqrt{3}}{2} + \frac{\sqrt{2}}{2} \cdot \frac{1}{2} = \frac{\sqrt{6} + \sqrt{2}}{4}\).</p>
+    </div>
+  </details>
+</div>
+
+<div class="example">
+  <p class="example-title">Ví dụ </p>
+  <p>Cho \(\sin a = \frac{3}{5}\), \(\cos b = \frac{12}{13}\) với \(0 \lt a \lt \frac{\pi}{2}\) và \(0 \lt b \lt \frac{\pi}{2}\). Tính \(\sin(a + b)\).</p>
+  <details>
+    <summary>Xem lời giải</summary>
+    <div class="solution">
+      <p>Vì \(a, b\) thuộc góc phần tư thứ nhất nên \(\cos a = \sqrt{1 - \frac{9}{25}} = \frac{4}{5}\) và \(\sin b = \sqrt{1 - \frac{144}{169}} = \frac{5}{13}\).</p>
+      <p>\(\sin(a + b) = \sin a \cos b + \cos a \sin b = \frac{3}{5} \cdot \frac{12}{13} + \frac{4}{5} \cdot \frac{5}{13} = \frac{56}{65}\).</p>
+    </div>
+  </details>
+</div>
+
+<div class="example">
+  <p class="example-title">Ví dụ 3</p>
+  <p>Tính \(\tan 75^\circ\).</p>
+  <details>
+    <summary>Xem lời giải</summary>
+    <div class="solution">
+      <p>\(\tan 75^\circ = \tan(45^\circ + 30^\circ) = \frac{\tan 45^\circ + \tan 30^\circ}{1 - \tan 45^\circ \cdot \tan 30^\circ} = \frac{1 + \frac{1}{\sqrt{3}}}{1 - \frac{1}{\sqrt{3}}}\)</p>
+      <p>\(= \frac{\sqrt{3} + 1}{\sqrt{3} - 1} = \frac{(\sqrt{3} + 1)^2}{2} = 2 + \sqrt{3}\).</p>
+    </div>
+  </details>
+</div>
+
+    <li class = "heading2"> Công thức nhân đôi </li>
+    <p> sin2a = 2sina.cosa</p>
+    <p>cos2a = cos²a - sin²a = 1 - 2sin²a = 2cos²a - 1</p>
+    <p> tan2a = \(\frac{2tan}{1 - tan²a}\)</p>
+
+    <h4 class = "heading2"> Chứng minh công thức nhân đôi </h4>
+    <p> sin2a = sin( a + a) = sina.cosa + cosa.sina = 2sina.cosa </p>
+    <p> cos2a = cos( a + a) = cosa.cosa - sina.sina = cos²a - sin²a (1)</p>
+    <p> Ta có: sin²a + cos²a = 1 (*)=> cos²a = 1 - sin²a, thay vào (1) => (1) = 1 - sin²a - sin²a = 1 - 2sin²a</p>
+    <p> Từ (*) => sin²a = 1 - cos²a, thay vào (1)=> (1) = cos²a - ( 1 - cos²a ) = cos²a - 1 + cos²a = 2cos²a - 1 </p>
+    <p> tan2a = tan( a + a ) = \(\frac{tana + tana}{1 - tana.tana}\) = \(\frac{2tana}{1 - tan²a}\)</p>
+
+<div class="example">
+  <p class="example-title">Ví dụ 1</p>
+  <p>Cho \(\sin\alpha = \frac{3}{5}\) với \(\frac{\pi}{2} \lt \alpha \lt \pi\). Tính \(\sin 2\alpha\), \(\cos 2\alpha\), \(\tan 2\alpha\).</p>
+  <details>
+    <summary>Xem lời giải</summary>
+    <div class="solution">
+      <p>Vì \(\frac{\pi}{2} \lt \alpha \lt \pi\) nên \(\cos\alpha \lt 0\), suy ra \(\cos\alpha = -\sqrt{1 - \frac{9}{25}} = -\frac{4}{5}\).</p>
+      <p>\(\sin 2\alpha = 2\sin\alpha\cos\alpha = 2 \cdot \frac{3}{5} \cdot \left(-\frac{4}{5}\right) = -\frac{24}{25}\).</p>
+      <p>\(\cos 2\alpha = 1 - 2\sin^2\alpha = 1 - \frac{18}{25} = \frac{7}{25}\).</p>
+      <p>\(\tan 2\alpha = \frac{\sin 2\alpha}{\cos 2\alpha} = -\frac{24}{7}\).</p>
+    </div>
+  </details>
+</div>
+
+<div class="example">
+  <p class="example-title">Ví dụ 2</p>
+  <p>Cho \(\sin\alpha = \frac{1}{3}\). Tính \(\cos 2\alpha\).</p>
+  <details>
+    <summary>Xem lời giải</summary>
+    <div class="solution">
+      <p>\(\cos 2\alpha = 1 - 2\sin^2\alpha = 1 - 2 \cdot \frac{1}{9} = \frac{7}{9}\).</p>
+    </div>
+  </details>
+</div>
+
+</ul>
+</main>
+<a href="Baitap2-1.html"> Đi đến phần ôn tập! </a>
+
+
+    </div>
+</body>
+
+</html>

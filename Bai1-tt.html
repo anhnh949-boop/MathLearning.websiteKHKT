@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+    <!-- Phần đầu -->
+    <head>
+<title style = "color:cadetblue;"> Bài 1: Giá trị lượng giác của góc lượng giác </title>
+<meta charset = "utf-8">
+<link rel="stylesheet" href="main.css">
+<link rel="stylesheet" href="baihoc.css">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&display=swap" rel="stylesheet">
+<script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            }
+        };
+    </script>
+    <script id ="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </head>
+
+    <!-- Phần thân -->
+    <body>
+         <div class = "header">
+    </div>
+    <main class="container">
+         <div>
+        <h1 style ="color:blue"> Bài 1: Giá trị lượng giác của góc lượng giác </h1>
+    </div>
+        <div>
+        <h2 style = "color:cornflowerblue"> Kiến thức trọng tâm </h2>
+        <ul>
+            <li class = "heading2"> Giá trị lượng giác của góc lượng giác </li>
+            <ul>
+            <li class = "pieces"> a. Đường tròn lượng giác </li>
+            <div class="card1">
+  <h3>Đường tròn lượng giác</h3>
+  <iframe
+    src="duongtron.html"
+    title="Đường tròn lượng giác tương tác"
+    class="embed-frame"
+    loading="lazy">
+  </iframe> 
+</div>
+            <p> Hình 1.1 </p>
+            <p> Đường tròn lượng giác là đường tròn có tâm tại gốc tọa độ, bán kính bằng 1</p>
+            <p> Điểm trên đường tròn lượng giác biểu diễn với số đo là α (độ hoặc radian) </p>
+            <li class = "pieces"> b. Các giá trị lượng giác </li>
+            <p> (Quan sát hình 1.1) </p>
+            <p> Hoành độ x của điểm M là cos của α, kí hiệu: cosα</p>
+            <p> Tung độ y của điểm M là sin của α, kí hiệu sinα </p>
+            
+            <h3>Lưu ý: dấu của các giá trị lượng giác</h3>
+
+<div class="table-wrap">
+  <table class="math-table sign-table">
+    <thead>
+      <tr>
+        <th>Khoảng của \(\alpha\)</th>
+        <th>\(\sin\alpha\)</th>
+        <th>\(\cos\alpha\)</th>
+        <th>\(\tan\alpha\)</th>
+        <th>\(\cot\alpha\)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>\(0 \le \alpha \le \frac{\pi}{2}\)</td>
+        <td class="pos">+</td>
+        <td class="pos">+</td>
+        <td class="pos">+</td>
+        <td class="pos">+</td>
+      </tr>
+      <tr>
+        <td>\(\frac{\pi}{2} \le \alpha \le \pi\)</td>
+        <td class="pos">+</td>
+        <td class="neg">−</td>
+        <td class="neg">−</td>
+        <td class="neg">−</td>
+      </tr>
+      <tr>
+        <td>\(\pi \le \alpha \le \frac{3\pi}{2}\)</td>
+        <td class="neg">−</td>
+        <td class="neg">−</td>
+        <td class="pos">+</td>
+        <td class="pos">+</td>
+      </tr>
+      <tr>
+        <td>\(\frac{3\pi}{2} \le \alpha \le 2\pi\)</td>
+        <td class="neg">−</td>
+        <td class="pos">+</td>
+        <td class="neg">−</td>
+        <td class="neg">−</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+            </ul>
+            <li class = "heading2"> Quan hệ giữa các giá trị lượng giác </li>
+            <ul>
+                <li class = "pieces"> a. Các công thức lượng giác cơ bản </li>
+                <p> sin² α + cos² α = 1 </p>
+                <p> 1 + tan² α = \(\frac{1}{cos² α}\) </p>
+                <p> 1 + cot² α = \(\frac{1}{sin² α}\)</p>
+                <p> tanα.cotα = 1 </p>
+                <p> tanα = \(\frac{sinα}{cosα}\) </p>
+                <p> cotα = \(\frac{cosα}{sinα}\) </p>
+            <div>
+    <li><h4 class = "heading2"> Ví dụ: </h4>
+   <div class="example">
+  <p class="example-title">Ví dụ 1</p>
+  <p>Cho \(\cos\alpha = \frac{1}{5}\) với \(0 \lt \alpha \lt \frac{\pi}{2}\). Tính \(\sin\alpha\) và \(\tan\alpha\).</p>
+  <details>
+    <summary>Xem lời giải</summary>
+    <div class="solution">
+      <p>Ta có \(\sin^2\alpha = 1 - \cos^2\alpha = 1 - \frac{1}{25} = \frac{24}{25}\).</p>
+      <p>Vì \(0 \lt \alpha \lt \frac{\pi}{2}\) nên \(\sin\alpha \gt 0\), suy ra \(\sin\alpha = \frac{2\sqrt{6}}{5}\).</p>
+      <p>\(\tan\alpha = \frac{\sin\alpha}{\cos\alpha} = \frac{2\sqrt{6}}{5} : \frac{1}{5} = 2\sqrt{6}\).</p>
+    </div>
+  </details>
+</div>
+
+<div class="example">
+  <p class="example-title">Ví dụ 2</p>
+  <p>Rút gọn \(A = \sin^2\alpha + \sin^2\alpha \cdot \cot^2\alpha\).</p>
+  <details>
+    <summary>Xem lời giải</summary>
+    <div class="solution">
+      <p>\(A = \sin^2\alpha\,(1 + \cot^2\alpha) = \sin^2\alpha \cdot \frac{1}{\sin^2\alpha} = 1\).</p>
+    </div>
+  </details>
+</div>
+    </li>
+    </div>
+                <li class = "pieces"> b. Giá trị lượng giác của các góc có liên quan đặc biệt </li>
+                <div class = "GTLG">
+                <ul class ="LG"> 
+                    <li class="he2"> Hai góc đối nhau </li>
+                    <p> cos-α = cosα </p>
+                    <p> sin-α = -sinα </p>
+                    <p> tan-α = -tanα </p>
+                    <p> cot-α = -cotα </p>
+                </ul>
+                <ul class ="LG">
+                    <li class="he2"> Hai góc bù nhau </li>
+                    <p> sin(π - α) = sinα </p>
+                    <p> cos(π - α) = -cosα </p>
+                    <p> tan(π - α) = -tanα </p>
+                    <p> cot(π - α) = -cotα </p>
+                </ul>
+                <ul class ="LG">
+                    <li class="he2"> Hai góc phụ nhau</li>
+                    <P> sin(\(\frac{π}{2}\) - α) = cosα </P>
+                    <P> cos(\(\frac{π}{2}\) - α) = sinα </P>
+                    <P> tan(\(\frac{π}{2}\) - α) = cotα </P>
+                    <P> cot(\(\frac{π}{2}\) - α) = tanα </P>
+                </ul>
+                <ul class ="LG">
+                    <li class="he2"> Hai góc hơn kém π </li>
+                    <p> sin(π + α) = -sinα</p>
+                    <p> cos(π + α) = -cosα</p>
+                    <p> tan(π + α) = tanα</p>
+                    <p> cot(π + α) = cotα</p>
+                </ul>
+            </div>
+
+            <div class="example">
+  <p class="example-title">Ví dụ 1</p>
+  <p>Tính \(\sin\frac{7\pi}{6}\) và \(\cos\frac{2\pi}{3}\).</p>
+  <details>
+    <summary>Xem lời giải</summary>
+    <div class="solution">
+      <p>Vì \(\frac{7\pi}{6} = \pi + \frac{\pi}{6}\) nên \(\sin\frac{7\pi}{6} = -\sin\frac{\pi}{6} = -\frac{1}{2}\).</p>
+      <p>Vì \(\frac{2\pi}{3} = \pi - \frac{\pi}{3}\) nên \(\cos\frac{2\pi}{3} = -\cos\frac{\pi}{3} = -\frac{1}{2}\).</p>
+    </div>
+  </details>
+</div>
+
+<div class="example">
+  <p class="example-title">Ví dụ 2</p>
+  <p>Rút gọn \(A = \sin(\pi - x) + \cos\left(\frac{\pi}{2} - x\right) + \sin(-x)\).</p>
+  <details>
+    <summary>Xem lời giải</summary>
+    <div class="solution">
+      <p>Ta có \(\sin(\pi - x) = \sin x\), \(\cos\left(\frac{\pi}{2} - x\right) = \sin x\), \(\sin(-x) = -\sin x\).</p>
+      <p>Suy ra \(A = \sin x + \sin x - \sin x = \sin x\).</p>
+    </div>
+  </details>
+</div>
+        </ul>
+        </div>
+        </main>
+
+    <div> 
+   <a href="Baitap1-2.html"> Đi đến phần ôn tập! </a>
+    </div>
+    </body>
+</html>

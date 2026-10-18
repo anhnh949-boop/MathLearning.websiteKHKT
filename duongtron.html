@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Đường tròn lượng giác tương tác</title>
+<style>
+  /* ===== Giao diện chung ===== */
+  .unit-circle-box {
+    --main: #4318ff;   /* màu chủ đạo */
+    --sin: #e8590c;    /* sin: cam */
+    --cos: #0b7285;    /* cos: xanh lam */
+    --tan: #7048e8;    /* tan: tím */
+    --cot: #d6336c;    /* cot: hồng */
+    max-width: 680px;
+    margin: 0 auto;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: #1b2559;
+  }
+  .unit-circle-box svg {
+    width: 100%;
+    height: auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(67, 24, 255, .1);
+    touch-action: none;       /* kéo bằng ngón tay không làm cuộn trang */
+    user-select: none;
+  }
+  .uc-text { font-size: 17px; font-style: italic; fill: #1b2559; }
+  .uc-axis-label { font-size: 15px; fill: #555; }
+  .uc-tick { font-size: 12px; fill: #888; }
+
+  /* Thanh công cụ: đổi đơn vị + bật/tắt trục */
+  .uc-toolbar {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    justify-content: space-between; align-items: center;
+    margin: 12px 0;
+  }
+  .uc-seg { display: inline-flex; border: 1px solid var(--main); border-radius: 10px; overflow: hidden; }
+  .uc-seg button {
+    border: none; background: #fff; color: var(--main);
+    padding: 6px 14px; cursor: pointer; font-size: 14px;
+  }
+  .uc-seg button.active { background: var(--main); color: #fff; }
+  .uc-toggles label { font-size: 14px; margin-left: 12px; cursor: pointer; }
+  .uc-toggles .t-tan { color: var(--tan); font-weight: 600; }
+  .uc-toggles .t-cot { color: var(--cot); font-weight: 600; }
+
+  /* Bảng giá trị */
+  .uc-panel { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .uc-card { background: #f4f7fe; border-radius: 12px; padding: 8px 6px; text-align: center; }
+  .uc-card small { display: block; color: #707eae; font-size: 12px; }
+  .uc-card b { font-size: 17px; }
+  .uc-dec { display: block; font-size: 12px; color: #707eae; min-height: 16px; }
+  .uc-card.angle b { color: var(--main); }
+  .uc-card.cos b { color: var(--cos); }
+  .uc-card.sin b { color: var(--sin); }
+  .uc-card.tan b { color: var(--tan); }
+  .uc-card.cot b { color: var(--cot); }
+  @media (max-width: 480px) {
+    .uc-panel { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* Nút chọn nhanh góc đặc biệt */
+  .uc-buttons { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; justify-content: center; }
+  .uc-buttons button {
+    border: 1px solid var(--main); background: #fff; color: var(--main);
+    padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 14px;
+  }
+  .uc-buttons button:hover { background: var(--main); color: #fff; }
+  .uc-hint { text-align: center; color: #707eae; font-size: 14px; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<div class="unit-circle-box">
+  <svg id="ucSvg" viewBox="0 0 600 600">
+    <!-- ===== Trục tan: đường thẳng tiếp xúc tại A (x = 520) ===== -->
+    <g id="tanStatic">
+      <line x1="520" y1="30" x2="520" y2="570" stroke="#7048e8" stroke-width="1.5" opacity="0.6"/>
+      <line x1="514" y1="80" x2="526" y2="80" stroke="#7048e8"/>
+      <line x1="514" y1="520" x2="526" y2="520" stroke="#7048e8"/>
+      <text class="uc-tick" x="530" y="84" fill="#7048e8" style="fill:#7048e8">1</text>
+      <text class="uc-tick" x="530" y="524" style="fill:#7048e8">-1</text>
+      <text class="uc-axis-label" x="528" y="46" style="fill:#7048e8;font-weight:600">tan</text>
+    </g>
+
+    <!-- ===== Trục cot: đường thẳng tiếp xúc tại B (y = 80) ===== -->
+    <g id="cotStatic">
+      <line x1="30" y1="80" x2="570" y2="80" stroke="#d6336c" stroke-width="1.5" opacity="0.6"/>
+      <line x1="520" y1="74" x2="520" y2="86" stroke="#d6336c"/>
+      <line x1="80" y1="74" x2="80" y2="86" stroke="#d6336c"/>
+      <text class="uc-tick" x="474" y="72" style="fill:#d6336c">1</text>
+      <text class="uc-tick" x="84" y="72" style="fill:#d6336c">-1</text>
+      <text class="uc-axis-label" x="34" y="72" style="fill:#d6336c;font-weight:600">cot</text>
+    </g>
+
+    <!-- Trục tọa độ sin, cos -->
+    <line x1="30" y1="300" x2="570" y2="300" stroke="#333" stroke-width="1.5"/>
+    <line x1="300" y1="570" x2="300" y2="30" stroke="#333" stroke-width="1.5"/>
+    <polygon points="570,300 558,294 558,306" fill="#333"/>
+    <polygon points="300,30 294,42 306,42" fill="#333"/>
+    <text class="uc-axis-label" x="568" y="322">cos</text>
+    <text class="uc-axis-label" x="310" y="38">sin</text>
+
+    <!-- Đường tròn đơn vị (tâm O(300,300), bán kính 220) -->
+    <circle cx="300" cy="300" r="220" fill="none" stroke="#333" stroke-width="1.5"/>
+
+    <!-- Các điểm cố định A, B, A', B' -->
+    <g fill="#333">
+      <circle cx="520" cy="300" r="4"/><circle cx="80" cy="300" r="4"/>
+      <circle cx="300" cy="80" r="4"/><circle cx="300" cy="520" r="4"/>
+    </g>
+    <text class="uc-text" x="500" y="320">A</text>
+    <text class="uc-text" x="48" y="290">A'</text>
+    <text class="uc-text" x="310" y="104">B</text>
+    <text class="uc-text" x="310" y="536">B'</text>
+    <text class="uc-text" x="282" y="318">O</text>
+
+    <!-- ===== Phần động của tan: đường OT và đoạn AT ===== -->
+    <g id="tanDyn">
+      <line id="ucOT" stroke="#7048e8" stroke-width="1.5" opacity="0.7"/>
+      <line id="ucTanSeg" x1="520" stroke="#7048e8" stroke-width="5" stroke-linecap="round" x2="520"/>
+      <circle id="ucT" cx="520" r="5" fill="#7048e8"/>
+      <text id="ucTLabel" class="uc-text" style="fill:#7048e8">T</text>
+    </g>
+
+    <!-- ===== Phần động của cot: đường OK và đoạn BK ===== -->
+    <g id="cotDyn">
+      <line id="ucOK" stroke="#d6336c" stroke-width="1.5" opacity="0.7"/>
+      <line id="ucCotSeg" y1="80" y2="80" stroke="#d6336c" stroke-width="5" stroke-linecap="round" x1="300"/>
+      <circle id="ucK" cy="80" r="5" fill="#d6336c"/>
+      <text id="ucKLabel" class="uc-text" style="fill:#d6336c">K</text>
+    </g>
+
+    <!-- Cung góc α -->
+    <path id="ucArc" fill="none" stroke="#4318ff" stroke-width="2"/>
+    <text id="ucAlphaLabel" class="uc-text" style="fill:#4318ff">α</text>
+
+    <!-- Bán kính OM -->
+    <line id="ucOM" x1="300" y1="300" stroke="#4318ff" stroke-width="2.5"/>
+
+    <!-- Đường chiếu nét đứt -->
+    <line id="ucToX" stroke="#0b7285" stroke-width="2" stroke-dasharray="6 5"/>
+    <line id="ucToY" stroke="#e8590c" stroke-width="2" stroke-dasharray="6 5"/>
+
+    <!-- Đoạn cos và sin trên hai trục -->
+    <line id="ucCosSeg" y1="300" y2="300" stroke="#0b7285" stroke-width="5" stroke-linecap="round"/>
+    <line id="ucSinSeg" x1="300" x2="300" stroke="#e8590c" stroke-width="5" stroke-linecap="round"/>
+
+    <!-- M1, M2 -->
+    <circle id="ucM1" cy="300" r="5" fill="#0b7285"/>
+    <circle id="ucM2" cx="300" r="5" fill="#e8590c"/>
+    <text id="ucM1Label" class="uc-text" style="font-size:14px">M₁</text>
+    <text id="ucM2Label" class="uc-text" style="font-size:14px">M₂</text>
+
+    <!-- Nhãn giá trị cos, sin chạy theo điểm M -->
+    <text id="ucCosLabel" class="uc-text" text-anchor="middle" style="fill:#0b7285;font-size:15px"></text>
+    <text id="ucSinLabel" class="uc-text" text-anchor="end" style="fill:#e8590c;font-size:15px"></text>
+
+    <!-- Điểm M (kéo được) -->
+    <circle id="ucMHalo" r="16" fill="#4318ff" opacity="0.15"/>
+    <circle id="ucM" r="8" fill="#4318ff" stroke="#fff" stroke-width="2" style="cursor:grab"/>
+    <text id="ucMLabel" class="uc-text" style="font-size:15px"></text>
+  </svg>
+
+  <!-- Thanh công cụ -->
+  <div class="uc-toolbar">
+    <div class="uc-seg">
+      <button id="btnDeg" class="active">Độ (°)</button>
+      <button id="btnRad">Radian</button>
+    </div>
+    <div class="uc-toggles">
+      <label class="t-tan"><input type="checkbox" id="chkTan" checked> Trục tan</label>
+      <label class="t-cot"><input type="checkbox" id="chkCot" checked> Trục cot</label>
+    </div>
+  </div>
+
+  <!-- Bảng giá trị -->
+  <div class="uc-panel">
+    <div class="uc-card angle"><small>Góc α</small><b id="valAngle"></b><span class="uc-dec" id="decAngle"></span></div>
+    <div class="uc-card cos"><small>cos α</small><b id="valCos"></b><span class="uc-dec" id="decCos"></span></div>
+    <div class="uc-card sin"><small>sin α</small><b id="valSin"></b><span class="uc-dec" id="decSin"></span></div>
+    <div class="uc-card tan"><small>tan α</small><b id="valTan"></b><span class="uc-dec" id="decTan"></span></div>
+    <div class="uc-card cot"><small>cot α</small><b id="valCot"></b><span class="uc-dec" id="decCot"></span></div>
+  </div>
+
+  <div class="uc-buttons" id="ucButtons"></div>
+  <p class="uc-hint">Kéo điểm M quanh đường tròn để xem sin, cos, tan, cot thay đổi.</p>
+</div>
+
+<script>
+/* =====================================================
+   ĐƯỜNG TRÒN LƯỢNG GIÁC TƯƠNG TÁC (JavaScript thuần)
+   ===================================================== */
+
+// ---- Hằng số: tâm O, bán kính R, vị trí trục tan (x = TAN_X) và trục cot (y = COT_Y) ----
+const CX = 300, CY = 300, R = 220;
+const TAN_X = CX + R;      // trục tan tiếp xúc đường tròn tại A
+const COT_Y = CY - R;      // trục cot tiếp xúc đường tròn tại B
+const LIMIT = 260;         // giới hạn để điểm T, K còn nằm trong khung hình
+
+// ---- Lấy phần tử trên trang ----
+const $ = id => document.getElementById(id);
+const svg = $('ucSvg');
+
+// ---- Trạng thái ----
+let alpha = Math.PI / 4;   // góc hiện tại (radian)
+let unit = 'deg';          // 'deg' hoặc 'rad'
+
+// Gán nhiều thuộc tính cho phần tử SVG
+function setAttrs(el, attrs) {
+  for (const k in attrs) el.setAttribute(k, attrs[k]);
+}
+
+// Định dạng số thập phân kiểu Việt Nam (dấu phẩy)
+function fmt(n) {
+  if (Math.abs(n) < 0.0005) n = 0;
+  return n.toFixed(3).replace('.', ',');
+}
+
+// Định dạng tan/cot: không xác định hoặc quá lớn thì hiện chữ
+function fmtTrig(v, defined) {
+  if (!defined) return 'không xác định';
+  if (Math.abs(v) >= 100) return v > 0 ? '+∞ (rất lớn)' : '−∞ (rất lớn)';
+  return fmt(v);
+}
+
+// ---- Ước chung lớn nhất, dùng để rút gọn phân số của π ----
+function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
+
+// ---- Hiển thị góc theo đơn vị đang chọn ----
+// degValue: số độ (có thể lẻ). Trả về chuỗi hiển thị.
+function formatAngle(degValue, mode) {
+  if (mode === 'deg') {
+    return Math.round(degValue) % 360 + '°';
+  }
+  // Chế độ radian: nếu là bội của 15° thì viết dạng phân số của π (vd π/6, 7π/6)
+  const k = Math.round(degValue / 15);
+  if (Math.abs(degValue - k * 15) < 0.05) {
+    if (k === 0) return '0';
+    let num = k, den = 12;                 // 15° = π/12
+    const g = gcd(num, den);
+    num /= g; den /= g;
+    const top = (num === 1 ? '' : num) + 'π';
+    return den === 1 ? top : top + '/' + den;
+  }
+  // Ngược lại hiện số thập phân
+  return (degValue * Math.PI / 180).toFixed(3).replace('.', ',') + ' rad';
+}
+
+// ---- Giá trị chính xác của góc đặc biệt (bội của 30° và 45°) ----
+// Bảng cho góc phụ (góc tham chiếu) trong khoảng 0°..90°. null = không xác định.
+const EXACT = {
+  0:  { sin: '0',    cos: '1',    tan: '0',    cot: null    },
+  30: { sin: '1/2',  cos: '√3/2', tan: '√3/3', cot: '√3'    },
+  45: { sin: '√2/2', cos: '√2/2', tan: '1',    cot: '1'     },
+  60: { sin: '√3/2', cos: '1/2',  tan: '√3',   cot: '√3/3'  },
+  90: { sin: '1',    cos: '0',    tan: null,   cot: '0'     }
+};
+
+// Thêm dấu trừ vào chuỗi (trừ số 0 và giá trị không xác định)
+function withSign(txt, negative) {
+  if (txt === null || txt === '0') return txt;
+  return negative ? '−' + txt : txt;
+}
+
+// Trả về {sin, cos, tan, cot} dạng chữ nếu là góc đặc biệt, ngược lại trả về null
+function exactValues(degValue) {
+  // Đưa góc về 0..360 và làm tròn
+  let d = ((Math.round(degValue) % 360) + 360) % 360;
+  // Chỉ nhận khi góc thật sự rất gần một góc đặc biệt (do làm tròn khi kéo)
+  if (Math.abs(degValue - Math.round(degValue)) > 0.05 && Math.abs(degValue - 360) > 0.05) return null;
+  if (d % 30 !== 0 && d % 45 !== 0) return null;
+
+  // Xác định góc phụ và dấu theo từng góc phần tư
+  let ref, sinNeg, cosNeg;
+  if (d <= 90)       { ref = d;       sinNeg = false; cosNeg = false; }
+  else if (d <= 180) { ref = 180 - d; sinNeg = false; cosNeg = true;  }
+  else if (d <= 270) { ref = d - 180; sinNeg = true;  cosNeg = true;  }
+  else               { ref = 360 - d; sinNeg = true;  cosNeg = false; }
+
+  const t = EXACT[ref];
+  const tanNeg = sinNeg !== cosNeg;      // tan, cot âm khi sin và cos trái dấu
+  return {
+    sin: withSign(t.sin, sinNeg),
+    cos: withSign(t.cos, cosNeg),
+    tan: withSign(t.tan, tanNeg),
+    cot: withSign(t.cot, tanNeg)
+  };
+}
+
+// ---- Vẽ lại mọi thứ theo góc alpha ----
+function update() {
+  const cos = Math.cos(alpha);
+  const sin = Math.sin(alpha);
+  // Giá trị chính xác (null nếu không phải góc đặc biệt)
+  const ex = exactValues(alpha * 180 / Math.PI);
+  const cosTxt = ex ? ex.cos : fmt(cos);
+  const sinTxt = ex ? ex.sin : fmt(sin);
+
+  // Điểm M trên màn hình (trục y của SVG hướng xuống nên phải trừ)
+  const mx = CX + R * cos;
+  const my = CY - R * sin;
+
+  setAttrs($('ucM'),     { cx: mx, cy: my });
+  setAttrs($('ucMHalo'), { cx: mx, cy: my });
+
+  // Nhãn M(x; y)
+  const label = $('ucMLabel');
+  label.textContent = `M(${cosTxt}; ${sinTxt})`;
+  label.setAttribute('x', mx + (cos >= 0 ? 14 : -14));
+  label.setAttribute('y', my + (sin >= 0 ? -14 : 24));
+  label.setAttribute('text-anchor', cos >= 0 ? 'start' : 'end');
+
+  // Bán kính OM
+  setAttrs($('ucOM'), { x2: mx, y2: my });
+
+  // Đường chiếu nét đứt
+  setAttrs($('ucToX'), { x1: mx, y1: my, x2: mx, y2: CY });
+  setAttrs($('ucToY'), { x1: mx, y1: my, x2: CX, y2: my });
+
+  // Đoạn đậm cos, sin
+  setAttrs($('ucCosSeg'), { x1: CX, x2: mx });
+  setAttrs($('ucSinSeg'), { y1: CY, y2: my });
+
+  // M1, M2
+  setAttrs($('ucM1'), { cx: mx });
+  setAttrs($('ucM2'), { cy: my });
+  setAttrs($('ucM1Label'), { x: mx - 6, y: CY + (sin >= 0 ? 22 : -12) });
+  setAttrs($('ucM2Label'), { x: CX + 10, y: my - 8 });
+
+  // Nhãn giá trị cos, sin
+  const cl = $('ucCosLabel');
+  cl.textContent = `cos α = ${cosTxt}`;
+  setAttrs(cl, { x: Math.min(Math.max(mx, 110), 490), y: CY + (sin >= 0 ? 48 : -34) });
+  const sl = $('ucSinLabel');
+  sl.textContent = `sin α = ${sinTxt}`;
+  setAttrs(sl, { x: CX - 12, y: my + 5 });
+
+  // Cung góc α
+  const r = 34;
+  const ax = CX + r * cos, ay = CY - r * sin;
+  const largeArc = alpha > Math.PI ? 1 : 0;
+  $('ucArc').setAttribute('d', `M ${CX + r} ${CY} A ${r} ${r} 0 ${largeArc} 0 ${ax} ${ay}`);
+  setAttrs($('ucAlphaLabel'), {
+    x: CX + 50 * Math.cos(alpha / 2),
+    y: CY - 50 * Math.sin(alpha / 2) + 5
+  });
+
+  // ---------- TAN ----------
+  // tan α = sin/cos, không xác định khi cos = 0 (α = 90°, 270°)
+  const tanOK = Math.abs(cos) > 1e-6;
+  const tan = tanOK ? sin / cos : 0;
+  const tanY = CY - R * tan;              // vị trí điểm T trên màn hình
+  const showTan = $('chkTan').checked;
+  $('tanStatic').style.display = showTan ? '' : 'none';
+  // Chỉ vẽ T khi xác định và còn nằm trong khung hình
+  const tanVisible = showTan && tanOK && Math.abs(R * tan) <= LIMIT;
+  $('tanDyn').style.display = tanVisible ? '' : 'none';
+  if (tanVisible) {
+    setAttrs($('ucOT'),     { x1: CX, y1: CY, x2: TAN_X, y2: tanY });
+    setAttrs($('ucTanSeg'), { y1: CY, y2: tanY });
+    setAttrs($('ucT'),      { cy: tanY });
+    setAttrs($('ucTLabel'), { x: TAN_X + 12, y: tanY - 8 });
+  }
+
+  // ---------- COT ----------
+  // cot α = cos/sin, không xác định khi sin = 0 (α = 0°, 180°)
+  const cotOK = Math.abs(sin) > 1e-6;
+  const cot = cotOK ? cos / sin : 0;
+  const cotX = CX + R * cot;              // vị trí điểm K trên màn hình
+  const showCot = $('chkCot').checked;
+  $('cotStatic').style.display = showCot ? '' : 'none';
+  const cotVisible = showCot && cotOK && Math.abs(R * cot) <= LIMIT;
+  $('cotDyn').style.display = cotVisible ? '' : 'none';
+  if (cotVisible) {
+    setAttrs($('ucOK'),     { x1: CX, y1: CY, x2: cotX, y2: COT_Y });
+    setAttrs($('ucCotSeg'), { x1: CX, x2: cotX });
+    setAttrs($('ucK'),      { cx: cotX });
+    setAttrs($('ucKLabel'), { x: cotX + 8, y: COT_Y - 12 });
+  }
+
+  // ---------- Bảng giá trị ----------
+  const degValue = alpha * 180 / Math.PI;
+  $('valAngle').textContent = formatAngle(degValue, unit);
+  // Ô chính: giá trị chính xác nếu có, ngược lại số thập phân.
+  // Dòng nhỏ bên dưới: số thập phân gần đúng (chỉ hiện khi có căn hoặc phân số).
+  function showValue(name, exactTxt, decimalTxt, defined) {
+    const main = $('val' + name), dec = $('dec' + name);
+    if (!defined) { main.textContent = 'không xác định'; dec.textContent = ''; return; }
+    if (exactTxt) {
+      main.textContent = exactTxt;
+      dec.textContent = /[√/]/.test(exactTxt) ? '≈ ' + decimalTxt : '';
+    } else {
+      main.textContent = decimalTxt;
+      dec.textContent = '';
+    }
+  }
+  showValue('Cos', ex && ex.cos, fmt(cos), true);
+  showValue('Sin', ex && ex.sin, fmt(sin), true);
+  showValue('Tan', ex && ex.tan, fmtTrig(tan, tanOK), tanOK);
+  showValue('Cot', ex && ex.cot, fmtTrig(cot, cotOK), cotOK);
+  $('decAngle').textContent = '';
+}
+
+// ---- Đổi vị trí chuột/ngón tay thành góc alpha ----
+function pointerToAngle(evt) {
+  // Chuyển tọa độ màn hình sang tọa độ SVG (đúng cả khi hình co giãn)
+  const pt = svg.createSVGPoint();
+  pt.x = evt.clientX;
+  pt.y = evt.clientY;
+  const p = pt.matrixTransform(svg.getScreenCTM().inverse());
+
+  // atan2 trả về -π..π; đổi sang 0..2π
+  let a = Math.atan2(CY - p.y, p.x - CX);
+  if (a < 0) a += 2 * Math.PI;
+
+  // Hút vào các góc bội của 15° khi kéo gần chúng
+  const step = Math.PI / 12;
+  const nearest = Math.round(a / step) * step;
+  if (Math.abs(a - nearest) < 0.04) a = nearest;
+
+  return a % (2 * Math.PI);
+}
+
+// ---- Kéo thả điểm M ----
+let dragging = false;
+svg.addEventListener('pointerdown', e => {
+  dragging = true;
+  svg.setPointerCapture(e.pointerId);
+  alpha = pointerToAngle(e);
+  update();
+});
+svg.addEventListener('pointermove', e => {
+  if (!dragging) return;
+  alpha = pointerToAngle(e);
+  update();
+});
+svg.addEventListener('pointerup',     () => dragging = false);
+svg.addEventListener('pointercancel', () => dragging = false);
+
+// ---- Nút chọn nhanh các góc đặc biệt (nhãn đổi theo đơn vị) ----
+const SPECIAL = [0, 30, 45, 60, 90, 120, 135, 150, 180, 210, 225, 240, 270, 300, 315, 330];
+function buildButtons() {
+  const box = $('ucButtons');
+  box.innerHTML = '';
+  SPECIAL.forEach(d => {
+    const btn = document.createElement('button');
+    btn.textContent = formatAngle(d, unit);
+    btn.onclick = () => { alpha = d * Math.PI / 180; update(); };
+    box.appendChild(btn);
+  });
+}
+
+// ---- Chuyển đổi giữa độ và radian ----
+function setUnit(mode) {
+  unit = mode;
+  $('btnDeg').classList.toggle('active', mode === 'deg');
+  $('btnRad').classList.toggle('active', mode === 'rad');
+  buildButtons();
+  update();
+}
+$('btnDeg').onclick = () => setUnit('deg');
+$('btnRad').onclick = () => setUnit('rad');
+
+// ---- Bật/tắt trục tan, cot ----
+$('chkTan').onchange = update;
+$('chkCot').onchange = update;
+
+// Khởi động
+buildButtons();
+update();
+</script>
+</body>
+</html>
