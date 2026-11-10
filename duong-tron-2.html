@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Đường tròn lượng giác tương tác</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#007dd1;--blue-dark:#0a4f86;--blue-light:#eaf5fd;--green:#1e8e3e;--red:#d93025;--text:#1f2d3d}
+*{box-sizing:border-box}
+body{margin:0;padding:12px;font-family:"Be Vietnam Pro",Arial,sans-serif;color:var(--text);background:transparent;line-height:1.6}
+.tabs{display:flex;gap:8px;margin-bottom:12px}
+.tab{flex:1;padding:10px;border:2px solid var(--blue);background:#fff;color:var(--blue);border-radius:8px;font:inherit;font-weight:500;cursor:pointer}
+.tab.on{background:var(--blue);color:#fff}
+.panel{display:none}.panel.on{display:block}
+.stage{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:center}
+svg{width:100%;max-width:340px;height:auto;background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+svg text{font-family:inherit;font-size:14px;fill:var(--text)}
+.ctrl{flex:1 1 230px;display:flex;flex-direction:column;gap:10px}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.b{padding:9px 14px;border:none;border-radius:8px;background:var(--blue);color:#fff;font:inherit;cursor:pointer}
+.b.neg{background:var(--green)}.b.pos{background:var(--red)}.b.gray{background:#5b6b7b}
+.b.act{outline:3px solid rgba(0,125,209,.4);outline-offset:1px}
+.b:focus-visible,.tab:focus-visible{outline:3px solid var(--blue-dark);outline-offset:2px}
+input[type=range]{width:100%}
+.info{background:var(--blue-light);border-radius:10px;padding:10px 14px}
+.info b{color:var(--blue-dark)}
+</style>
+</head>
+<body>
+<div class="tabs" id="tabs">
+  <button class="tab on" onclick="show(0)">Góc lượng giác</button>
+  <button class="tab" onclick="show(1)">Đơn vị radian</button>
+</div>
+
+<!-- ===== 1. GÓC LƯỢNG GIÁC ===== -->
+<div class="panel on" id="p0"><div class="stage">
+  <svg viewBox="0 0 340 340" role="img" aria-label="Góc lượng giác">
+    <line x1="10" y1="170" x2="330" y2="170" stroke="#cfdbe6"/>
+    <line x1="170" y1="10" x2="170" y2="330" stroke="#cfdbe6"/>
+    <circle cx="170" cy="170" r="150" fill="none" stroke="#e3ecf4"/>
+    <line x1="170" y1="170" x2="320" y2="170" stroke="#0a4f86" stroke-width="3"/>
+    <text x="322" y="162">u</text>
+    <line id="om" x1="170" y1="170" x2="320" y2="170" stroke="#5b6b7b" stroke-width="2.5" stroke-dasharray="6 5"/>
+    <polyline id="arc1" fill="none" stroke-width="4" stroke-linecap="round"/>
+    <circle id="dot1" r="5"/>
+    <circle cx="170" cy="170" r="4" fill="#1f2d3d"/>
+    <text x="152" y="188">O</text>
+    <text id="mlab" text-anchor="middle" font-style="italic">m</text>
+  </svg>
+  <div class="ctrl">
+    <div class="btns">
+      <button class="b pos" id="bpos" onclick="spin(1)">↺ Quay dương</button>
+      <button class="b neg" id="bneg" onclick="spin(-1)">↻ Quay âm</button>
+      <button class="b gray" onclick="spin(0)">Dừng</button>
+      <button class="b gray" onclick="ang=0;spin(0)">Đặt lại</button>
+    </div>
+    <input type="range" id="sl1" min="-720" max="720" step="1" value="0" aria-label="Số đo góc" oninput="ang=+this.value;dir=0;sync()">
+    <div class="info" id="info1"></div>
+  </div>
+</div></div>
+
+<!-- ===== 2. RADIAN ===== -->
+<div class="panel" id="p1"><div class="stage">
+  <svg viewBox="0 0 340 345" role="img" aria-label="Đơn vị radian">
+    <circle cx="170" cy="125" r="100" fill="none" stroke="#cfdbe6" stroke-width="2"/>
+    <line x1="170" y1="125" x2="270" y2="125" stroke="#0a4f86" stroke-width="3"/>
+    <text x="214" y="118">r</text>
+    <line id="rad2" x1="170" y1="125" x2="270" y2="125" stroke="#5b6b7b" stroke-width="2" stroke-dasharray="5 4"/>
+    <polyline id="arc2" fill="none" stroke="#d93025" stroke-width="5" stroke-linecap="round"/>
+    <polyline id="ang2" fill="none" stroke="#007dd1" stroke-width="2.5"/>
+    <circle id="dot2" r="5" fill="#d93025"/>
+    <circle cx="170" cy="125" r="4" fill="#1f2d3d"/>
+    <text x="154" y="146">O</text>
+    <text x="270" y="142">A</text>
+    <text x="30" y="272">Cung l trải thẳng, đo bằng đơn vị r</text>
+    <line x1="30" y1="300" x2="281" y2="300" stroke="#e3ecf4" stroke-width="8" stroke-linecap="round"/>
+    <line id="bar" x1="30" y1="300" x2="70" y2="300" stroke="#d93025" stroke-width="8" stroke-linecap="round"/>
+    <g id="ticks"></g>
+  </svg>
+  <div class="ctrl">
+    <div class="btns">
+      <button class="b" onclick="setA(1)">1 rad</button>
+      <button class="b" onclick="setA(Math.PI/2)">π/2</button>
+      <button class="b" onclick="setA(Math.PI)">π</button>
+      <button class="b" onclick="setA(2*Math.PI)">2π</button>
+    </div>
+    <input type="range" id="sl2" min="0" max="6.2832" step="any" value="1" aria-label="Độ dài cung" oninput="al=+this.value;draw2()">
+    <div class="info" id="info2"></div>
+  </div>
+</div></div>
+
+<script>
+const $=id=>document.getElementById(id), D=Math.PI/180;
+const fmt=x=>String(Number(x.toFixed(2))).replace('.',',');
+
+
+let ang=0, dir=0;
+const pt=(a,r)=>[170+r*Math.cos(a*D),170-r*Math.sin(a*D)];
+function spin(d){dir=d;sync()}
+function sync(){
+  const col=ang<0?'#1e8e3e':'#d93025', n=Math.max(2,Math.ceil(Math.abs(ang)/3));
+  let p='';
+  for(let i=0;i<=n;i++){const t=ang*i/n,[x,y]=pt(t,34+8*Math.abs(t)/360);p+=x.toFixed(1)+','+y.toFixed(1)+' ';}
+  $('arc1').setAttribute('points',p);$('arc1').setAttribute('stroke',col);
+  const [dx,dy]=pt(ang,34+8*Math.abs(ang)/360);
+  $('dot1').setAttribute('cx',dx);$('dot1').setAttribute('cy',dy);$('dot1').setAttribute('fill',col);
+  const [ex,ey]=pt(ang,150),[lx,ly]=pt(ang,163);
+  $('om').setAttribute('x2',ex);$('om').setAttribute('y2',ey);
+  $('mlab').setAttribute('x',lx);$('mlab').setAttribute('y',ly+5);
+  const a=Math.round(ang),a0=((a%360)+360)%360,k=(a-a0)/360;
+  $('sl1').value=a;
+  $('bpos').classList.toggle('act',dir==1);$('bneg').classList.toggle('act',dir==-1);
+  $('info1').innerHTML=
+    'sđ(Ou, Om) = <b>'+a+'°</b> = <b>'+fmt(a/180)+'π</b> rad<br>'+
+    'Chiều quay: <b>'+(a>0?'dương (ngược chiều kim đồng hồ)':a<0?'âm (cùng chiều kim đồng hồ)':'chưa quay')+'</b><br>'+
+    'Hệ thức: '+a+'° = '+a0+'° + ('+k+')·360°';
+}
+(function tick(){
+  if(dir){ang=Math.max(-720,Math.min(720,ang+dir*1.5));if(Math.abs(ang)>=720)dir=0;sync();}
+  requestAnimationFrame(tick);
+})();
+
+
+let al=1;
+function setA(v){al=v;$('sl2').value=v;draw2()}
+function draw2(){
+  const cx=170,cy=125,R=100,n=Math.max(2,Math.ceil(al*40));
+  let p='',q='';
+  for(let i=0;i<=n;i++){const t=al*i/n;
+    p+=(cx+R*Math.cos(t)).toFixed(1)+','+(cy-R*Math.sin(t)).toFixed(1)+' ';
+    q+=(cx+28*Math.cos(t)).toFixed(1)+','+(cy-28*Math.sin(t)).toFixed(1)+' ';}
+  $('arc2').setAttribute('points',p);$('ang2').setAttribute('points',q);
+  const ex=cx+R*Math.cos(al),ey=cy-R*Math.sin(al);
+  $('rad2').setAttribute('x2',ex);$('rad2').setAttribute('y2',ey);
+  $('dot2').setAttribute('cx',ex);$('dot2').setAttribute('cy',ey);
+  $('bar').setAttribute('x2',30+al*40);
+  const deg=al*180/Math.PI;let note='';
+  if(Math.abs(al-1)<0.005)note='<br>Cung có độ dài l = R nên có số đo <b>1 rad</b>.';
+  else if(Math.abs(al-Math.PI)<0.005)note='<br><b>π rad = 180°</b> (nửa đường tròn).';
+  else if(Math.abs(al-2*Math.PI)<0.005)note='<br><b>2π rad = 360°</b> (cả đường tròn).';
+  $('info2').innerHTML='Độ dài cung l = <b>'+fmt(al)+'</b>·R<br>Số đo: <b>'+fmt(al)+' rad</b> = <b>'+fmt(al/Math.PI)+'π</b> rad ≈ <b>'+fmt(deg)+'°</b>'+note;
+}
+let t='';for(let i=1;i<=6;i++)t+='<line x1="'+(30+i*40)+'" y1="292" x2="'+(30+i*40)+'" y2="308" stroke="#5b6b7b"/><text x="'+(30+i*40)+'" y="328" text-anchor="middle">'+i+'r</text>';
+$('ticks').innerHTML=t;
+
+
+function show(n){
+  document.querySelectorAll('.tab').forEach((e,i)=>e.classList.toggle('on',i==n));
+  document.querySelectorAll('.panel').forEach((e,i)=>e.classList.toggle('on',i==n));
+}
+if(location.hash==='#goc'||location.hash==='#radian'){
+  $('tabs').style.display='none';show(location.hash==='#radian'?1:0);
+}
+sync();draw2();
+</script>
+</body>
+</html>
