@@ -1,0 +1,12 @@
+.fig-radian { margin: 16px 0; text-align: center; }
+.fig-radian svg {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  background: white;
+  border-radius: 12px;
+}
+.fig-radian figcaption { font-style: italic; margin-top: 6px; }
+
+.r-label     { font-size: 18px; font-style: italic; font-weight: 700; fill: #d93025; }
+.small-label { font-size: 13px; fill: #1f2d3d; }
