@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<link rel="stylesheet" href="ontaplg.css">
+<title> Ôn tập chương lượng giác</title>
+<script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            }
+        };
+    </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+<main>
+<section id="intro">
+  <h1>Mèo đang gấp sao may mắn</h1>
+  <div id="status">Mèo cắt một dải giấy…</div>
+  <svg viewBox="0 0 240 240" role="img" aria-label="Chú mèo đang gấp ngôi sao giấy">
+    <g class="tail"><path d="M178 178 C215 175 225 140 205 128" stroke="var(--cat2)" stroke-width="12" fill="none" stroke-linecap="round"/></g>
+    <ellipse cx="120" cy="155" rx="55" ry="48" fill="var(--cat)"/>
+    <ellipse cx="120" cy="165" rx="30" ry="30" fill="#fff3e0" opacity=".8"/>
+    <polygon points="82,62 86,22 114,48" fill="var(--cat)"/><polygon points="158,62 154,22 126,48" fill="var(--cat)"/>
+    <polygon points="88,54 90,35 105,48" fill="#f7b7c4"/><polygon points="152,54 150,35 135,48" fill="#f7b7c4"/>
+    <circle cx="120" cy="80" r="44" fill="var(--cat)"/>
+    <path d="M110 40 v10 M120 38 v12 M130 40 v10" stroke="var(--cat2)" stroke-width="4" stroke-linecap="round"/>
+    <ellipse class="eye" cx="102" cy="82" rx="5" ry="7" fill="#3a2a22"/><ellipse class="eye" cx="138" cy="82" rx="5" ry="7" fill="#3a2a22"/>
+    <circle cx="104" cy="79" r="1.8" fill="#fff"/><circle cx="140" cy="79" r="1.8" fill="#fff"/>
+    <path d="M115 94 h10 l-5 6z" fill="#e0577a"/>
+    <path d="M120 100 q-6 8 -13 3 M120 100 q6 8 13 3" stroke="#3a2a22" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M80 92 l-26 -5 M80 98 l-26 4 M160 92 l26 -5 M160 98 l26 4" stroke="#3a2a22" stroke-width="1.6" stroke-linecap="round"/>
+    <rect x="30" y="205" width="180" height="18" rx="6" fill="var(--table)"/>
+    <!-- giấy -->
+    <g id="s1" class="stage on"><rect x="88" y="196" width="64" height="9" rx="2" fill="var(--paper)" stroke="var(--paper2)"/></g>
+    <g id="s2" class="stage"><polygon points="120,174 133.3,183.7 128.2,199.3 111.8,199.3 106.7,183.7" fill="var(--paper)" stroke="var(--paper2)" stroke-width="2"/></g>
+    <g id="s3" class="stage"><polygon points="120,168 125.9,179.9 139,181.8 129.5,191.1 131.8,204.2 120,198 108.2,204.2 110.5,191.1 101,181.8 114.1,179.9" fill="var(--paper)" stroke="var(--paper2)" stroke-width="2" stroke-linejoin="round"/></g>
+    <g id="star4" class="stage"><polygon points="120,162 127.5,177 144,179.5 132,191 135,207 120,199 105,207 108,191 96,179.5 112.5,177" fill="#ffd84d" stroke="#f4a261" stroke-width="2" stroke-linejoin="round"/>
+      <text class="spark" x="84" y="168" font-size="16">✨</text><text class="spark" x="146" y="164" font-size="16">✨</text></g>
+    <circle class="pawL" cx="98" cy="190" r="12" fill="var(--cat)"/><circle class="pawR" cx="142" cy="190" r="12" fill="var(--cat)"/>
+  </svg>
+  <div class="bar"><i id="prog"></i></div>
+  <button class="link" id="skip">Bỏ qua, vào ôn tập luôn</button>
+</section>
+
+<section id="quiz" class="hidden">
+  <h2>Ôn tập chương Lượng giác</h2>
+  <div class="card" id="qcard">
+    <div class="top"><span id="num"></span><span id="score"></span></div>
+    <span class="tag" id="tag"></span>
+    <div class="q" id="q"></div>
+    <div id="opts"></div>
+    <div id="fb"></div>
+    <button class="btn hidden" id="next">Câu tiếp theo</button>
+  </div>
+  <div class="card hidden" id="result">
+    <div class="q" style="text-align:center">Hoàn thành rồi!</div>
+    <div class="big" id="final"></div>
+    <p id="msg" style="text-align:center"></p>
+    <div style="text-align:center"><button class="btn" id="again">Làm lại</button></div>
+  </div>
+  <div class="formulas">Gợi ý: sin²α + cos²α = 1 · tanα = sinα/cosα · sin2α = 2sinα·cosα</div>
+</section>
+<script src="ontaplg.js"></script>
+</main>
+</body>
+</html>
